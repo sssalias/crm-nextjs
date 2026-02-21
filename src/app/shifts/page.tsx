@@ -75,7 +75,7 @@ export default function ShiftsPage() {
         <div className="space-y-6">
             <div className="mb-8">
                 <h1 className="text-4xl font-bold text-gray-800">Управление сменами</h1>
-                <p className="text-gray-600">Оуравляйте своими рабочими сменами</p>
+                <p className="text-gray-600">Уравляйте своими рабочими сменами</p>
             </div>
 
             {error && (

@@ -47,8 +47,9 @@ export function useFetch<T = any>(
                 throw new Error(json.error || `Request failed: ${res.status}`)
             }
 
-            setData(json)
-            return json
+            const result = { success: true, ...json }
+            setData(result as any)
+            return result as any
         } catch (err: any) {
             const msg = err.message || 'Unknown error'
             setError(msg)

@@ -1,0 +1,23 @@
+services:
+  crm:
+    build: .
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.crm.entrypoints=http"
+      - "traefik.http.routers.crm.rule=Host(`crm.smoldev.ru`)"
+      - "traefik.http.middlewares.crm-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.crm.middlewares=crm-https-redirect"
+      - "traefik.http.routers.crm-secure.entrypoints=https"
+      - "traefik.http.routers.crm-secure.rule=Host(`crm.smoldev.ru`)"
+      - "traefik.http.routers.crm-secure.tls=true"
+      - "traefik.http.routers.crm-secure.service=crm"
+      - "traefik.http.services.crm.loadbalancer.server.port=8000"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+    restart: always
+
+
+networks:
+  proxy:
+    external: true

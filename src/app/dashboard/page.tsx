@@ -60,7 +60,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
             <div className="mb-8">
                 <h1 className="text-4xl font-bold text-gray-800">Дашборд</h1>
-                <p className="text-gray-600">Новые вернытесь, {user.fullName}!</p>
+                <p className="text-gray-600">Добрый день, {user.fullName}!</p>
             </div>
 
             {/* Operator/Admin Dashboard */}

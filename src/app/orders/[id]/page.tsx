@@ -75,7 +75,7 @@ export default function OrderDetailPage() {
 
     const handleCancel = async () => {
         setError(null)
-        const result = await cancelOrder({ body: JSON.stringify({ reason: 'Отменен оператором' }) })
+        const result = await cancelOrder({ body: JSON.stringify({ cancelReason: 'Отменен оператором' }) })
         if (result?.success) {
             setSuccessMessage('Заказ успешно отменен')
             setTimeout(() => router.push('/orders'), 1500)
@@ -123,7 +123,7 @@ export default function OrderDetailPage() {
         if (result?.success) {
             setSuccessMessage('Наружу зарегистрировано')
             setPaymentAmount('')
-            setOrder({ ...order, paidAmount: result.order.paidAmount })
+            setOrder({ ...order, paidAmount: result.paidAmount })
         } else {
             setError(result?.error || 'Не удалось регистрар͚ платеж')
         }

@@ -53,8 +53,36 @@ export default function CreateOrderPage() {
     useEffect(() => {
         if (servicesData && servicesData.services) setServices(servicesData.services as Service[])
         if (clientsData && clientsData.users) setClients(clientsData.users as Client[])
+        // initially set all masters; we'll refine when service selected
         if (mastersData && mastersData.users) setMasters(mastersData.users as Master[])
     }, [servicesData, clientsData, mastersData])
+
+    // When service changes, fetch only masters who can perform that service
+    useEffect(() => {
+        const sid = formData.serviceId
+        if (!sid) return
+
+        let mounted = true
+            // call endpoint directly with query param
+
+            // Alternate approach: call endpoint directly
+            ; (async () => {
+                try {
+                    const resp = await fetch(`/api/master-services?serviceId=${encodeURIComponent(sid)}`)
+                    const json = await resp.json()
+                    if (!mounted) return
+                    if (json.masters) {
+                        setMasters(json.masters as Master[])
+                    }
+                } catch (e) {
+                    // ignore — keep existing masters list
+                }
+            })()
+
+        return () => {
+            mounted = false
+        }
+    }, [formData.serviceId])
 
     if (userLoading) return <div className="p-4">Загружаю...</div>
 

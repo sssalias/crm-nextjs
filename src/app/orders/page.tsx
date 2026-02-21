@@ -73,7 +73,7 @@ export default function OrdersPage() {
             <div className="mb-8 flex justify-between items-start">
                 <div>
                     <h1 className="text-4xl font-bold text-gray-800">Заказы</h1>
-                    <p className="text-gray-600">Оуравляйте всеми заказами</p>
+                    <p className="text-gray-600">Уравляйте всеми заказами</p>
                 </div>
                 {canCreateOrder && (
                     <Link href="/orders/new" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
