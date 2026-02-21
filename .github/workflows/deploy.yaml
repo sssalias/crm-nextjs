@@ -6,20 +6,17 @@ on:
 
 jobs:
   is-docker-installed:
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: [self-hosted, Linux, X64, crm]
     steps:
       - name: Проверка докера...
         run: docker version
 
   deploy-crm:
     needs: is-docker-installed
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: [self-hosted, Linux, X64, crm]
     steps:
       - name: Клонирование репозитория...
         uses: actions/checkout@v3
-
-      - name: Остановка старых контейнеров...
-        run: docker compose down || true
 
       - name: Пересборка и запуск приложения...
         run: |
