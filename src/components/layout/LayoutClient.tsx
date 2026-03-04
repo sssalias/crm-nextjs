@@ -6,7 +6,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
-    const { user, loading } = useUser()
+    const { user, loading, refetch } = useUser()
     const router = useRouter()
     const pathname = usePathname()
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -17,7 +17,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
 
     const handleLogout = async () => {
         await fetch('/api/auth/logout', { method: 'POST' })
-        router.refresh()
+        await refetch() // Обновляем состояние пользователя
         router.push('/login')
     }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { User } from '@/entities/User'
 
 export function useUser() {
@@ -8,7 +8,7 @@ export function useUser() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
-    const fetchUser = async () => {
+    const fetchUser = useCallback(async () => {
         setLoading(true)
         try {
             const res = await fetch('/api/auth/me')
@@ -26,11 +26,11 @@ export function useUser() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [])
 
     useEffect(() => {
         fetchUser()
-    }, [])
+    }, [fetchUser])
 
     return { user, loading, error, refetch: fetchUser }
 }

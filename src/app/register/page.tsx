@@ -44,9 +44,8 @@ export default function RegisterPage() {
         })
 
         if (result?.user) {
-            // Обновляем серверное состояние и затем перенаправляем
-            router.refresh()
-            router.push('/dashboard')
+            // Обновляем состояние и перенаправляем
+            window.location.href = '/dashboard'
         } else if (result?.error) {
             setValidationError(result.error)
         }
