@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm'
 import type { MasterService } from './MasterService'
-import type { Order } from './Order'
 
 @Entity({ name: 'services' })
 export class Service {
@@ -25,7 +24,4 @@ export class Service {
 
     @OneToMany(() => require('./MasterService').MasterService, (ms: MasterService) => ms.service, { nullable: true })
     masterServices!: MasterService[]
-
-    @OneToMany(() => require('./Order').Order, (o: Order) => o.service, { nullable: true })
-    orders!: Order[]
 }
