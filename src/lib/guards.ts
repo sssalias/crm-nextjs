@@ -9,6 +9,11 @@ export async function requireOperatorWithOpenShift(req: Request) {
         throw new Response(JSON.stringify({ error: 'Forbidden - operator role required' }), { status: 403, headers: { 'Content-Type': 'application/json' } })
     }
 
+    // admins are allowed to bypass shift check entirely
+    if (user.role === Role.ADMIN) {
+        return { user, shift: null }
+    }
+
     if (!AppDataSource.isInitialized) await initializeDataSource()
     const shiftRepo = AppDataSource.getRepository(Shift)
     const openShift = await shiftRepo.findOne({ where: { operator: { id: user.id }, isClosed: false } })

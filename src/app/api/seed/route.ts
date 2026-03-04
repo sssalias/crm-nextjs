@@ -48,26 +48,26 @@ export async function POST(request: NextRequest) {
         // Create core users: operator and admin
         const operator1 = userRepository.create({
             fullName: 'Оператор Сергей',
-            phone: '+79990000001',
+            phone: '79990000001',
             passwordHash: await hashPassword('operator'),
             role: 'OPERATOR',
         })
 
         const admin1 = userRepository.create({
             fullName: 'Администратор Михаил',
-            phone: '+79990000002',
+            phone: '79990000002',
             passwordHash: await hashPassword('admin'),
             role: 'ADMIN',
         })
 
         // Create several мастеров
         const mastersData = [
-            { fullName: 'Иван Петров', phone: '+79990000101', experienceYears: 12, specialization: 'Двигатель' },
-            { fullName: 'Алексей Смирнов', phone: '+79990000102', experienceYears: 8, specialization: 'Подвеска и ходовая' },
-            { fullName: 'Елена Кузнецова', phone: '+79990000103', experienceYears: 6, specialization: 'Тормоза и шины' },
-            { fullName: 'Дмитрий Иванов', phone: '+79990000104', experienceYears: 10, specialization: 'Электрика и диагностика' },
-            { fullName: 'Ольга Николаева', phone: '+79990000105', experienceYears: 5, specialization: 'Кондиционеры и климат' },
-            { fullName: 'Сергей Орлов', phone: '+79990000106', experienceYears: 7, specialization: 'Кузовные работы' },
+            { fullName: 'Иван Петров', phone: '79990000101', experienceYears: 12, specialization: 'Двигатель' },
+            { fullName: 'Алексей Смирнов', phone: '79990000102', experienceYears: 8, specialization: 'Подвеска и ходовая' },
+            { fullName: 'Елена Кузнецова', phone: '79990000103', experienceYears: 6, specialization: 'Тормоза и шины' },
+            { fullName: 'Дмитрий Иванов', phone: '79990000104', experienceYears: 10, specialization: 'Электрика и диагностика' },
+            { fullName: 'Ольга Николаева', phone: '79990000105', experienceYears: 5, specialization: 'Кондиционеры и климат' },
+            { fullName: 'Сергей Орлов', phone: '79990000106', experienceYears: 7, specialization: 'Кузовные работы' },
         ]
 
         const masters = await Promise.all(
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         // Create a set of клиентов
         const clientsData = Array.from({ length: 20 }).map((_, i) => ({
             fullName: `Клиент ${i + 1}`,
-            phone: `+799900002${String(10 + i).padStart(2, '0')}`,
+            phone: `799900002${String(10 + i).padStart(2, '0')}`,
         }))
 
         const clients = await Promise.all(

@@ -204,7 +204,7 @@ export default function CreateOrderPage() {
                         ) : (
                             services.map((service) => (
                                 <option key={service.id} value={service.id}>
-                                    {service.name} - ${(service.price / 100).toFixed(2)}
+                                    {service.name} - ₽{(service.price / 100).toFixed(2)}
                                 </option>
                             ))
                         )}
@@ -280,7 +280,7 @@ export default function CreateOrderPage() {
                 {/* Объяснение цены */}
                 {selectedService && (
                     <div className="bg-gray-50 border border-gray-200 rounded p-4">
-                        <h3 className="font-bold text-gray-800 mb-3">Калкуляция цены</h3>
+                        <h3 className="font-bold text-gray-800 mb-3">Калькуляция цены</h3>
                         <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
                                 <span className="text-gray-600">Цена услуги:</span>
@@ -299,7 +299,7 @@ export default function CreateOrderPage() {
                                 </div>
                             )}
                             <div className="border-t border-gray-300 pt-2 flex justify-between">
-                                <span className="font-bold text-gray-800">Китоговая цена:</span>
+                                <span className="font-bold text-gray-800">Итоговая цена:</span>
                                 <span className="font-bold text-lg text-gray-800">₽{finalPrice.toFixed(2)}</span>
                             </div>
                         </div>

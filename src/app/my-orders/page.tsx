@@ -69,18 +69,20 @@ export default function MyOrdersPage() {
 
     return (
         <div className="space-y-6">
-            <div className="mb-8">
-                <h1 className="text-4xl font-bold text-gray-800">{pageTitle}</h1>
-                <p className="text-gray-600">{pageDescription}</p>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                <div>
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">{pageTitle}</h1>
+                    <p className="text-xs sm:text-sm md:text-base text-gray-600 mt-1">{pageDescription}</p>
+                </div>
             </div>
 
             {/* Фильтр */}
-            <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-bold text-gray-800 mb-4">Фильтр</h2>
+            <div className="bg-white rounded-lg shadow p-3 sm:p-4 md:p-6">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 mb-3 md:mb-4">Фильтр</h2>
                 <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    className="w-full md:w-48 px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                 >
                     <option value="">Все статусы</option>
                     <option value="CREATED">Создан</option>
@@ -103,46 +105,46 @@ export default function MyOrdersPage() {
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-100 border-b border-gray-200">
+                            <table className="w-full min-w-max">
+                                <thead className="bg-gray-100 border-b border-gray-200 sticky top-0">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
+                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700">ID</th>
                                         {!isMaster && (
-                                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Мастер</th>
+                                            <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700">Мастер</th>
                                         )}
                                         {isMaster && (
-                                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Клиент</th>
+                                            <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700">Клиент</th>
                                         )}
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Услуга</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Дата</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Цена</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Оплачено</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Статус</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Действия</th>
+                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700">Услуга</th>
+                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700 whitespace-nowrap">Дата</th>
+                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700">Цена</th>
+                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700">Оплачено</th>
+                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700">Статус</th>
+                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-700">Действия</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {orders.map((order) => (
                                         <tr key={order.id} className="border-b border-gray-200 hover:bg-gray-50">
-                                            <td className="px-6 py-4 text-sm font-medium">#{order.id}</td>
+                                            <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm font-medium whitespace-nowrap">#{order.id}</td>
                                             {!isMaster && (
-                                                <td className="px-6 py-4 text-sm">
+                                                <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm">
                                                     {order.master?.fullName || 'Не присвоен'}
                                                 </td>
                                             )}
                                             {isMaster && (
-                                                <td className="px-6 py-4 text-sm">{order.client?.fullName || 'Н/Д'}</td>
+                                                <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm">{order.client?.fullName || 'Н/Д'}</td>
                                             )}
-                                            <td className="px-6 py-4 text-sm">{order.service?.name || 'Н/Д'}</td>
-                                            <td className="px-6 py-4 text-sm">{new Date(order.scheduledAt).toLocaleDateString('ru')}</td>
-                                            <td className="px-6 py-4 text-sm font-semibold">₽{finalPrice(order).toFixed(2)}</td>
-                                            <td className="px-6 py-4 text-sm">₽{(order.paidAmount / 100).toFixed(2)}</td>
-                                            <td className="px-6 py-4 text-sm">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(order.status)}`}>
+                                            <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm">{order.service?.name || 'Н/Д'}</td>
+                                            <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm whitespace-nowrap">{new Date(order.scheduledAt).toLocaleDateString('ru')}</td>
+                                            <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm font-semibold whitespace-nowrap">₽{finalPrice(order).toFixed(2)}</td>
+                                            <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm whitespace-nowrap">₽{(order.paidAmount / 100).toFixed(2)}</td>
+                                            <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm">
+                                                <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(order.status)}`}>
                                                     {order.status}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-sm">
+                                            <td className="px-2 sm:px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm">
                                                 <Link
                                                     href={`/orders/${order.id}`}
                                                     className="text-blue-600 hover:text-blue-800 font-medium"

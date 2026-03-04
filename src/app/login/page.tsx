@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useFetch } from '@/hooks/useFetch'
 import Link from 'next/link'
 import { useState } from 'react'
+import { ensurePlusPrefix, isValidPhoneInput, formatPhoneForDisplay } from '@/lib/phone'
 
 export default function LoginPage() {
     const router = useRouter()
@@ -18,6 +19,11 @@ export default function LoginPage() {
 
         if (!phone || !password) {
             setValidationError('Телефон и пароль обязательны')
+            return
+        }
+
+        if (!isValidPhoneInput(phone)) {
+            setValidationError('Некорректный формат телефона. Ожидается: +123456789')
             return
         }
 
@@ -45,10 +51,16 @@ export default function LoginPage() {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Телефон</label>
                         <input
                             type="tel"
+                            pattern="^\+[\d ]{6,20}$"
+                            inputMode="tel"
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            onChange={(e) => {
+                                const raw = ensurePlusPrefix(e.target.value)
+                                setPhone(formatPhoneForDisplay(raw))
+                            }}
+                            onBlur={() => setPhone(formatPhoneForDisplay(ensurePlusPrefix(phone)))}
                             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                            placeholder="+1234567890"
+                            placeholder="+7 999 000 0001"
                         />
                     </div>
 

@@ -69,6 +69,9 @@ export async function GET(req: Request) {
     const operatorId = url.searchParams.get('operatorId')
     const dateFrom = url.searchParams.get('dateFrom')
     const dateTo = url.searchParams.get('dateTo')
+    const search = url.searchParams.get('search')
+    const page = Math.max(1, Number(url.searchParams.get('page')) || 1)
+    const pageSize = Math.max(1, Math.min(100, Number(url.searchParams.get('pageSize')) || 10))
 
     if (!maybeUser) {
         // anonymous users cannot list orders
@@ -100,6 +103,30 @@ export async function GET(req: Request) {
     if (dateFrom) qb.andWhere('order.scheduledAt >= :from', { from: dateFrom })
     if (dateTo) qb.andWhere('order.scheduledAt <= :to', { to: dateTo })
 
+    if (search) {
+        const numericId = Number(search)
+        if (!Number.isNaN(numericId)) {
+            qb.andWhere('(order.id = :id OR client.fullName LIKE :name)', { id: numericId, name: `%${search}%` })
+        } else {
+            qb.andWhere('client.fullName LIKE :name', { name: `%${search}%` })
+        }
+    }
+
+    // Sort by createdAt descending (latest first)
+    qb.orderBy('order.createdAt', 'DESC')
+
+    // Get total count before pagination
+    const total = await qb.getCount()
+
+    // Apply pagination
+    const skip = (page - 1) * pageSize
+    qb.skip(skip).take(pageSize)
+
     const orders = await qb.getMany()
-    return new Response(JSON.stringify({ orders }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    const totalPages = Math.ceil(total / pageSize)
+
+    return new Response(
+        JSON.stringify({ orders, pagination: { page, pageSize, total, totalPages } }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+    )
 }

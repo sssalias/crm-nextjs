@@ -3,12 +3,13 @@
 import { useUser } from '@/hooks/useUser'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
     const { user, loading } = useUser()
     const router = useRouter()
     const pathname = usePathname()
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     // These pages don't require authentication
     const publicPages = ['/login', '/register']
@@ -30,18 +31,41 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     return (
         <>
             {user ? (
-                <div className="flex min-h-screen">
+                <div className="flex min-h-screen bg-gray-50">
+                    {/* Overlay на мобильных при открытом меню */}
+                    {sidebarOpen && (
+                        <div
+                            className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+                            onClick={() => setSidebarOpen(false)}
+                        />
+                    )}
+
                     {/* Навигация по боковой панели */}
-                    <nav className="w-64 bg-white shadow-lg p-4">
-                        <div className="mb-8">
-                            <h1 className="text-xl font-bold text-blue-600">CRM Система</h1>
-                            <p className="text-sm text-gray-600 mt-1">{user.fullName}</p>
-                            <p className="text-xs text-gray-500">{user.role}</p>
+                    <nav
+                        className={`fixed md:static top-0 left-0 h-screen w-64 bg-white shadow-lg p-4 z-40 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+                            }`}
+                    >
+                        <div className="mb-8 flex justify-between items-start">
+                            <div>
+                                <h1 className="text-lg sm:text-xl font-bold text-blue-600">CRM Система</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 mt-1">{user.fullName}</p>
+                                <p className="text-xs text-gray-500">{user.role}</p>
+                            </div>
+                            <button
+                                className="md:hidden text-gray-600 hover:text-gray-800"
+                                onClick={() => setSidebarOpen(false)}
+                            >
+                                ✕
+                            </button>
                         </div>
 
                         <ul className="space-y-2">
                             <li>
-                                <Link href="/dashboard" className="block px-4 py-2 rounded hover:bg-gray-100">
+                                <Link
+                                    href="/dashboard"
+                                    className="block px-4 py-2 rounded hover:bg-gray-100 text-sm md:text-base"
+                                    onClick={() => setSidebarOpen(false)}
+                                >
                                     Дашборд
                                 </Link>
                             </li>
@@ -49,12 +73,20 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                             {(user.role === 'OPERATOR' || user.role === 'ADMIN') && (
                                 <>
                                     <li>
-                                        <Link href="/shifts" className="block px-4 py-2 rounded hover:bg-gray-100">
+                                        <Link
+                                            href="/shifts"
+                                            className="block px-4 py-2 rounded hover:bg-gray-100 text-sm md:text-base"
+                                            onClick={() => setSidebarOpen(false)}
+                                        >
                                             Смены
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="/orders/new" className="block px-4 py-2 rounded hover:bg-gray-100">
+                                        <Link
+                                            href="/orders/new"
+                                            className="block px-4 py-2 rounded hover:bg-gray-100 text-sm md:text-base"
+                                            onClick={() => setSidebarOpen(false)}
+                                        >
                                             Создать заказ
                                         </Link>
                                     </li>
@@ -63,7 +95,11 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
 
                             {user.role === 'MASTER' && (
                                 <li>
-                                    <Link href="/my-orders" className="block px-4 py-2 rounded hover:bg-gray-100">
+                                    <Link
+                                        href="/my-orders"
+                                        className="block px-4 py-2 rounded hover:bg-gray-100 text-sm md:text-base"
+                                        onClick={() => setSidebarOpen(false)}
+                                    >
                                         Мои заказы
                                     </Link>
                                 </li>
@@ -72,12 +108,20 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                             {user.role === 'CLIENT' && (
                                 <>
                                     <li>
-                                        <Link href="/services" className="block px-4 py-2 rounded hover:bg-gray-100">
+                                        <Link
+                                            href="/services"
+                                            className="block px-4 py-2 rounded hover:bg-gray-100 text-sm md:text-base"
+                                            onClick={() => setSidebarOpen(false)}
+                                        >
                                             Обзор услуг
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="/my-orders" className="block px-4 py-2 rounded hover:bg-gray-100">
+                                        <Link
+                                            href="/my-orders"
+                                            className="block px-4 py-2 rounded hover:bg-gray-100 text-sm md:text-base"
+                                            onClick={() => setSidebarOpen(false)}
+                                        >
                                             Мои заказы
                                         </Link>
                                     </li>
@@ -85,13 +129,32 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                             )}
 
                             <li>
-                                <Link href="/orders" className="block px-4 py-2 rounded hover:bg-gray-100">
+                                <Link
+                                    href="/orders"
+                                    className="block px-4 py-2 rounded hover:bg-gray-100 text-sm md:text-base"
+                                    onClick={() => setSidebarOpen(false)}
+                                >
                                     Все заказы
                                 </Link>
                             </li>
 
+                            {(user.role === 'OPERATOR' || user.role === 'ADMIN') && (
+                                <li>
+                                    <Link
+                                        href="/clients"
+                                        className="block px-4 py-2 rounded hover:bg-gray-100 text-sm md:text-base"
+                                        onClick={() => setSidebarOpen(false)}
+                                    >
+                                        Клиенты
+                                    </Link>
+                                </li>
+                            )}
+
                             <li className="pt-4">
-                                <button onClick={handleLogout} className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                                <button
+                                    onClick={handleLogout}
+                                    className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm md:text-base"
+                                >
                                     Выход
                                 </button>
                             </li>
@@ -99,7 +162,19 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                     </nav>
 
                     {/* Основное содержимое */}
-                    <main className="flex-1 p-8">{children}</main>
+                    <main className="flex-1 overflow-hidden">
+                        <div className="relative">
+                            {/* Кнопка для открытия меню на мобильных */}
+                            <button
+                                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                onClick={() => setSidebarOpen(!sidebarOpen)}
+                                title="Открыть меню"
+                            >
+                                ☰
+                            </button>
+                        </div>
+                        <div className="p-4 sm:p-6 md:p-8 pt-16 md:pt-8">{children}</div>
+                    </main>
                 </div>
             ) : (
                 <div className="min-h-screen bg-blue-50 flex items-center justify-center">

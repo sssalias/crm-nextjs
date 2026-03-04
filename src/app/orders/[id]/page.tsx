@@ -19,6 +19,8 @@ interface Order {
     extraWork: number
     paidAmount: number
     completionComment?: string
+    createdAt: string
+    updatedAt: string
     client?: { id: number; fullName: string; phone: string }
     service?: { id: number; name: string; price: number }
     master?: { id: number; fullName: string }
@@ -161,9 +163,21 @@ export default function OrderDetailPage() {
                                 <span className="font-bold text-gray-800">{order.status}</span>
                             </div>
                             <div className="flex justify-between">
+                                <span className="text-gray-600">Создан:</span>
+                                <span className="font-bold text-gray-800">
+                                    {new Date(order.createdAt).toLocaleString('ru')}
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
                                 <span className="text-gray-600">Планируемая дата:</span>
                                 <span className="font-bold text-gray-800">
                                     {new Date(order.scheduledAt).toLocaleString('ru')}
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-600">Дата выполнения:</span>
+                                <span className="font-bold text-gray-800">
+                                    {order.status === 'COMPLETED' ? new Date(order.updatedAt).toLocaleString('ru') : '—'}
                                 </span>
                             </div>
                             <div className="flex justify-between">
@@ -218,7 +232,7 @@ export default function OrderDetailPage() {
                                 </div>
                             )}
                             <div className="border-t border-gray-200 pt-3 flex justify-between">
-                                <span className="font-semibold text-gray-800">Китоговая цена:</span>
+                                <span className="font-semibold text-gray-800">Итоговая цена:</span>
                                 <span className="font-bold text-lg text-gray-800">
                                     ₽{finalPrice.toFixed(2)}
                                 </span>
