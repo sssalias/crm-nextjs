@@ -10,6 +10,17 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     const router = useRouter()
     const pathname = usePathname()
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [isMobile, setIsMobile] = useState(false)
+
+    // Check if device is mobile
+    React.useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768)
+        }
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
 
     // These pages don't require authentication
     const publicPages = ['/login', '/register']
@@ -33,16 +44,16 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
             {user ? (
                 <div className="flex min-h-screen bg-gray-50">
                     {/* Overlay на мобильных при открытом меню */}
-                    {sidebarOpen && (
+                    {sidebarOpen && isMobile && (
                         <div
-                            className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+                            className="fixed inset-0 bg-black bg-opacity-50 z-30"
                             onClick={() => setSidebarOpen(false)}
                         />
                     )}
 
                     {/* Навигация по боковой панели */}
                     <nav
-                        className={`fixed md:static top-0 left-0 h-screen w-64 bg-white shadow-lg p-4 z-40 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+                        className={`fixed md:static top-0 left-0 h-screen w-64 bg-white shadow-lg p-4 z-40 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : isMobile ? '-translate-x-full' : 'translate-x-0'
                             }`}
                     >
                         <div className="mb-8 flex justify-between items-start">
@@ -52,7 +63,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                                 <p className="text-xs text-gray-500">{user.role}</p>
                             </div>
                             <button
-                                className="md:hidden text-gray-600 hover:text-gray-800"
+                                className={`${isMobile ? 'block' : 'hidden'} text-gray-600 hover:text-gray-800`}
                                 onClick={() => setSidebarOpen(false)}
                             >
                                 ✕
@@ -166,14 +177,14 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                         <div className="relative">
                             {/* Кнопка для открытия меню на мобильных */}
                             <button
-                                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                className={`${isMobile ? 'fixed' : 'hidden'} top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded hover:bg-blue-700`}
                                 onClick={() => setSidebarOpen(!sidebarOpen)}
                                 title="Открыть меню"
                             >
                                 ☰
                             </button>
                         </div>
-                        <div className="p-4 sm:p-6 md:p-8 pt-16 md:pt-8">{children}</div>
+                        <div className={`${isMobile ? 'p-4 pt-16' : 'p-4 sm:p-6 md:p-8'}`}>{children}</div>
                     </main>
                 </div>
             ) : (
