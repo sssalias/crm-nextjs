@@ -23,9 +23,9 @@ export class Service {
     @CreateDateColumn({ name: 'created_at', type: 'datetime' })
     createdAt!: Date
 
-    @OneToMany(() => require('./MasterService').MasterService, (ms: MasterService) => ms.service)
+    @OneToMany(() => require('./MasterService').MasterService, (ms: MasterService) => ms.service, { eager: false })
     masterServices!: MasterService[]
 
-    @OneToMany(() => require('./Order').Order, (o: Order) => o.service)
+    @OneToMany(() => require('./Order').Order, (o: Order) => o.service, { eager: false })
     orders!: Order[]
 }

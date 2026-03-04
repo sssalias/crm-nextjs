@@ -12,7 +12,7 @@ export class MasterService {
     @JoinColumn({ name: 'master_id' })
     master!: User
 
-    @ManyToOne(() => require('./Service').Service, (s: Service) => s.masterServices, { onDelete: 'CASCADE' })
+    @ManyToOne(() => require('./Service').Service, (s: Service) => s.masterServices, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'service_id' })
     service!: Service
 }
