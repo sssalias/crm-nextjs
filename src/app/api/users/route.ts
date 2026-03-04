@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { AppDataSource } from '@/db/data-source'
+import { User } from '@/entities/User'
 
 const getDataSource = async () => {
     if (!AppDataSource.isInitialized) {
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
         const role = request.nextUrl.searchParams.get('role')
 
         const dataSource = await getDataSource()
-        const userRepository = dataSource.getRepository('User')
+        const userRepository = dataSource.getRepository(User)
 
         let query = userRepository.createQueryBuilder('user')
 

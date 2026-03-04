@@ -2,6 +2,7 @@ import { initializeDataSource, AppDataSource } from '@/db/data-source'
 import { requireOperatorWithOpenShift, requireMaster } from '@/lib/guards'
 import { Order, OrderStatus } from '@/entities/Order'
 import { User, Role } from '@/entities/User'
+import { Service } from '@/entities/Service'
 import { MasterService } from '@/entities/MasterService'
 
 export async function GET(req: Request) {
@@ -37,7 +38,7 @@ export async function PATCH(req: Request) {
     }
 
     if (serviceId) {
-        const svc = await AppDataSource.getRepository('Service').findOne({ where: { id: serviceId } })
+        const svc = await AppDataSource.getRepository(Service).findOne({ where: { id: serviceId } })
         if (!svc) return new Response(JSON.stringify({ error: 'Service not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } })
         order.service = svc as any
     }

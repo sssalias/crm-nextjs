@@ -1,7 +1,7 @@
 import { initializeDataSource, AppDataSource } from '@/db/data-source'
 import { requireOperatorWithOpenShift } from '@/lib/guards'
 import { Order } from '@/entities/Order'
-import { OrderOperation, OperationType } from '@/entities/Order'
+import { OrderOperation, OperationType } from '@/entities/OrderOperation'
 
 export async function POST(req: Request) {
     const { user } = await requireOperatorWithOpenShift(req)

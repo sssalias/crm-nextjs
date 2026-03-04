@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { AppDataSource } from '@/db/data-source'
+import { Service } from '@/entities/Service'
 
 const getDataSource = async () => {
     if (!AppDataSource.isInitialized) {
@@ -11,7 +12,7 @@ const getDataSource = async () => {
 export async function GET(request: NextRequest) {
     try {
         const dataSource = await getDataSource()
-        const serviceRepository = dataSource.getRepository('Service')
+        const serviceRepository = dataSource.getRepository(Service)
 
         const services = await serviceRepository.find({
             where: { isActive: true },
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
         }
 
         const dataSource = await getDataSource()
-        const serviceRepository = dataSource.getRepository('Service')
+        const serviceRepository = dataSource.getRepository(Service)
 
         const service = serviceRepository.create({
             name,

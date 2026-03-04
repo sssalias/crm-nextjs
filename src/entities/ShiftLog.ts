@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm'
-import type { Shift } from './Shift'
-import type { User } from './User'
+import { Shift } from './Shift'
+import { User } from './User'
 
 export enum ShiftAction {
     OPEN = 'OPEN',
@@ -12,7 +12,7 @@ export class ShiftLog {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @ManyToOne(() => require('./Shift').Shift, (s: Shift) => s.logs, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Shift, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'shift_id' })
     shift!: Shift
 

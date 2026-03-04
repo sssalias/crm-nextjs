@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { AppDataSource } from '@/db/data-source'
+import { Shift } from '@/entities/Shift'
 import { getUserFromRequest } from '@/lib/session'
 
 const getDataSource = async () => {
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
         }
 
         const dataSource = await getDataSource()
-        const shiftRepository = dataSource.getRepository('Shift')
+        const shiftRepository = dataSource.getRepository(Shift)
 
         // Get shifts for current operator (filter by relation)
         const shifts = await shiftRepository.find({

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { AppDataSource } from '@/db/data-source'
+import { MasterService } from '@/entities/MasterService'
 
 const getDataSource = async () => {
     if (!AppDataSource.isInitialized) {
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
 
         const dataSource = await getDataSource()
         // Use query builder to find masters linked to the service
-        const msRepo = dataSource.getRepository('MasterService')
+        const msRepo = dataSource.getRepository(MasterService)
 
         const rows = await msRepo
             .createQueryBuilder('ms')

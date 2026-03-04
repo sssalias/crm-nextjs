@@ -1,8 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, Index } from 'typeorm'
-import type { MasterService } from './MasterService'
-import type { OrderOperation } from './Order'
-import type { Order } from './Order'
-import type { Shift } from './Shift'
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Index } from 'typeorm'
 
 export enum Role {
     OPERATOR = 'OPERATOR',
@@ -44,22 +40,4 @@ export class User {
 
     @CreateDateColumn({ name: 'created_at', type: 'datetime' })
     createdAt!: Date
-
-    @OneToMany(() => require('./MasterService').MasterService, (ms: MasterService) => ms.master)
-    masterServices!: MasterService[]
-
-    @OneToMany(() => require('./Order').Order, (o: Order) => o.client)
-    clientOrders!: Order[]
-
-    @OneToMany(() => require('./Order').Order, (o: Order) => o.master)
-    masterOrders!: Order[]
-
-    @OneToMany(() => require('./Order').Order, (o: Order) => o.operator)
-    operatorOrders!: Order[]
-
-    @OneToMany(() => require('./Shift').Shift, (s: Shift) => s.operator)
-    shifts!: Shift[]
-
-    @OneToMany(() => require('./Order').OrderOperation, (op: OrderOperation) => op.createdBy)
-    orderOperations!: OrderOperation[]
 }

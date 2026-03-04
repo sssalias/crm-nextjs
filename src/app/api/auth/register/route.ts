@@ -12,8 +12,7 @@ export async function POST(req: Request) {
     }
 
     await initializeDataSource()
-    // avoid potential metadata mismatches by using name
-    const repo = AppDataSource.getRepository('User')
+    const repo = AppDataSource.getRepository(User)
     const normPhone = normalizePhoneForDB(phone)
     const exists = await repo.findOne({ where: { phone: normPhone } })
     if (exists) return new Response(JSON.stringify({ error: 'Phone already in use' }), { status: 409, headers: { 'Content-Type': 'application/json' } })

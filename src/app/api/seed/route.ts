@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { AppDataSource } from '@/db/data-source'
 import { hashPassword } from '@/lib/auth'
+import { User, Role } from '@/entities/User'
+import { Service } from '@/entities/Service'
+import { MasterService } from '@/entities/MasterService'
+import { Order, OrderStatus } from '@/entities/Order'
+import { OrderOperation, OperationType } from '@/entities/OrderOperation'
 
 const getDataSource = async () => {
     if (!AppDataSource.isInitialized) {
@@ -13,9 +18,9 @@ export async function POST(request: NextRequest) {
     try {
         const dataSource = await getDataSource()
 
-        const userRepository = dataSource.getRepository('User')
-        const serviceRepository = dataSource.getRepository('Service')
-        const masterServiceRepository = dataSource.getRepository('MasterService')
+        const userRepository = dataSource.getRepository(User)
+        const serviceRepository = dataSource.getRepository(Service)
+        const masterServiceRepository = dataSource.getRepository(MasterService)
 
         // Check if already seeded
         const existingUsers = await userRepository.count()
@@ -50,14 +55,14 @@ export async function POST(request: NextRequest) {
             fullName: 'Оператор Сергей',
             phone: '79990000001',
             passwordHash: await hashPassword('operator'),
-            role: 'OPERATOR',
+            role: Role.OPERATOR,
         })
 
         const admin1 = userRepository.create({
             fullName: 'Администратор Михаил',
             phone: '79990000002',
             passwordHash: await hashPassword('admin'),
-            role: 'ADMIN',
+            role: Role.ADMIN,
         })
 
         // Create several мастеров
@@ -75,7 +80,7 @@ export async function POST(request: NextRequest) {
                 userRepository.create({
                     ...m,
                     passwordHash: await hashPassword('master'),
-                    role: 'MASTER',
+                    role: Role.MASTER,
                 })
             )
         )
@@ -88,7 +93,7 @@ export async function POST(request: NextRequest) {
 
         const clients = await Promise.all(
             clientsData.map(async (c) =>
-                userRepository.create({ ...c, passwordHash: await hashPassword('client'), role: 'CLIENT' })
+                userRepository.create({ ...c, passwordHash: await hashPassword('client'), role: Role.CLIENT })
             )
         )
 
@@ -107,8 +112,8 @@ export async function POST(request: NextRequest) {
         await masterServiceRepository.save(masterServiceEntries)
 
         // Create many orders with varied statuses and operations
-        const orderRepository = dataSource.getRepository('Order')
-        const operationRepository = dataSource.getRepository('OrderOperation')
+        const orderRepository = dataSource.getRepository(Order)
+        const operationRepository = dataSource.getRepository(OrderOperation)
 
         const allOrders: any[] = []
 
@@ -133,7 +138,7 @@ export async function POST(request: NextRequest) {
                 let paidAmount = 0
 
                 if (statusRand < 0.5) {
-                    status = 'COMPLETED'
+                    status = OrderStatus.COMPLETED
                     // small random extra work/discount
                     const extra = Math.random() < 0.3 ? 500 : 0
                     const discount = Math.random() < 0.2 ? 300 : 0
@@ -141,12 +146,12 @@ export async function POST(request: NextRequest) {
                     completionComment = 'Работа выполнена качественно.'
                     paidAmount = finalPrice
                 } else if (statusRand < 0.7) {
-                    status = 'CANCELLED'
+                    status = OrderStatus.CANCELLED
                     cancelReason = 'Клиент отменил запись'
                     finalPrice = 0
                     paidAmount = 0
                 } else {
-                    status = 'IN_PROGRESS'
+                    status = OrderStatus.IN_PROGRESS
                     // partially paid sometimes
                     if (Math.random() < 0.4) {
                         paidAmount = Math.floor(servicePrice / 2)
@@ -179,19 +184,19 @@ export async function POST(request: NextRequest) {
         const savedOrders = await orderRepository.find()
         const operationsToSave: any[] = []
         for (const o of savedOrders) {
-            if (o.status === 'COMPLETED' && o.finalPrice && o.finalPrice > 0) {
+            if (o.status === OrderStatus.COMPLETED && o.finalPrice && o.finalPrice > 0) {
                 operationsToSave.push(
-                    operationRepository.create({ order: o, type: 'PAYMENT', amount: o.finalPrice, createdBy: operator1 })
+                    operationRepository.create({ order: o, type: OperationType.PAYMENT, amount: o.finalPrice, createdBy: operator1 })
                 )
             }
-            if (o.status === 'CANCELLED') {
+            if (o.status === OrderStatus.CANCELLED) {
                 operationsToSave.push(
-                    operationRepository.create({ order: o, type: 'CANCELLATION', reason: o.cancelReason || 'Отмена', createdBy: operator1 })
+                    operationRepository.create({ order: o, type: OperationType.CANCELLATION, reason: o.cancelReason || 'Отмена', createdBy: operator1 })
                 )
             }
-            if (o.paidAmount && o.paidAmount > 0 && o.status !== 'COMPLETED') {
+            if (o.paidAmount && o.paidAmount > 0 && o.status !== OrderStatus.COMPLETED) {
                 operationsToSave.push(
-                    operationRepository.create({ order: o, type: 'PAYMENT', amount: o.paidAmount, createdBy: operator1 })
+                    operationRepository.create({ order: o, type: OperationType.PAYMENT, amount: o.paidAmount, createdBy: operator1 })
                 )
             }
         }

@@ -6,10 +6,9 @@ import {
     JoinColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    OneToMany,
 } from 'typeorm'
-import type { User } from './User'
-import type { Service } from './Service'
+import { User } from './User'
+import { Service } from './Service'
 
 
 export enum OrderStatus {
@@ -23,19 +22,19 @@ export class Order {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @ManyToOne(() => require('./User').User, (u: User) => u.clientOrders, { nullable: false })
+    @ManyToOne(() => User, { nullable: false })
     @JoinColumn({ name: 'client_id' })
     client!: User
 
-    @ManyToOne(() => require('./Service').Service, { nullable: true })
+    @ManyToOne(() => Service, { nullable: true })
     @JoinColumn({ name: 'service_id' })
     service!: Service
 
-    @ManyToOne(() => require('./User').User, (u: User) => u.masterOrders, { nullable: true })
+    @ManyToOne(() => User, { nullable: true })
     @JoinColumn({ name: 'master_id' })
     master?: User
 
-    @ManyToOne(() => require('./User').User, (u: User) => u.operatorOrders, { nullable: true })
+    @ManyToOne(() => User, { nullable: true })
     @JoinColumn({ name: 'operator_id' })
     operator?: User
 
@@ -74,43 +73,4 @@ export class Order {
 
     @UpdateDateColumn({ name: 'updated_at', type: 'datetime' })
     updatedAt!: Date
-
-    // operations relationship (OrderOperation is declared below to avoid circular import)
-    @OneToMany(() => OrderOperation, (op: OrderOperation) => op.order)
-    operations!: OrderOperation[]
-}
-
-
-/* Moved OrderOperation into this file to avoid circular import issues */
-import { Entity as E2, PrimaryGeneratedColumn as P2, Column as C2, ManyToOne as M2, JoinColumn as J2, CreateDateColumn as CD2 } from 'typeorm'
-
-export enum OperationType {
-    PAYMENT = 'PAYMENT',
-    CANCELLATION = 'CANCELLATION',
-}
-
-@E2({ name: 'order_operations' })
-export class OrderOperation {
-    @P2()
-    id!: number
-
-    @M2(() => Order, (o: Order) => o.operations, { onDelete: 'CASCADE' })
-    @J2({ name: 'order_id' })
-    order!: Order
-
-    @C2({ type: 'varchar' })
-    type!: OperationType
-
-    @C2({ type: 'integer', nullable: true })
-    amount?: number
-
-    @C2({ nullable: true })
-    reason?: string
-
-    @M2(() => require('./User').User, { nullable: true })
-    @J2({ name: 'created_by' })
-    createdBy?: User
-
-    @CD2({ name: 'created_at', type: 'datetime' })
-    createdAt!: Date
 }

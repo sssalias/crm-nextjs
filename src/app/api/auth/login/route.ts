@@ -9,8 +9,7 @@ export async function POST(req: Request) {
     if (!phone || !password) return new Response(JSON.stringify({ error: 'phone and password required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
 
     await initializeDataSource()
-    // using entity name string prevents module duplication issues
-    const repo = AppDataSource.getRepository('User')
+    const repo = AppDataSource.getRepository(User)
     const normPhone = normalizePhoneForDB(phone)
     const user = await repo.findOne({ where: { phone: normPhone } })
     if (!user) return new Response(JSON.stringify({ error: 'Неверные учетные данные' }), { status: 401, headers: { 'Content-Type': 'application/json' } })

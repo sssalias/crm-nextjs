@@ -1,6 +1,7 @@
 import { initializeDataSource, AppDataSource } from '@/db/data-source'
 import { requireOperatorWithOpenShift, requireMaster } from '@/lib/guards'
-import { Order, OrderStatus, OrderOperation, OperationType } from '@/entities/Order'
+import { Order, OrderStatus } from '@/entities/Order'
+import { OrderOperation, OperationType } from '@/entities/OrderOperation'
 import { User, Role } from '@/entities/User'
 
 async function getCurrentUserAndRole(req: Request): Promise<{ user: User; viaOperatorShift?: boolean }> {

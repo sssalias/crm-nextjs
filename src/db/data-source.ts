@@ -3,7 +3,8 @@ import { DataSource } from 'typeorm'
 import { User } from '../entities/User'
 import { Service } from '../entities/Service'
 import { MasterService } from '../entities/MasterService'
-import { Order, OrderOperation } from '../entities/Order'
+import { Order } from '../entities/Order'
+import { OrderOperation } from '../entities/OrderOperation'
 import { Shift } from '../entities/Shift'
 import { ShiftLog } from '../entities/ShiftLog'
 
@@ -19,9 +20,10 @@ declare global {
 export const AppDataSource = globalThis.__appDataSource ?? new DataSource({
     type: 'sqlite',
     database: databasePath,
-    synchronize: isDev, // disable in production to avoid circular dependency validation
+    synchronize: true,
     logging: isDev,
-    entities: [User, Service, MasterService, Order, Shift, ShiftLog, OrderOperation],
+    entities: [User, Service, MasterService, Order, OrderOperation, Shift, ShiftLog],
+    dropSchema: false,
 })
 
 if (!globalThis.__appDataSource) globalThis.__appDataSource = AppDataSource
