@@ -27,7 +27,7 @@ export class Order {
     @JoinColumn({ name: 'client_id' })
     client!: User
 
-    @ManyToOne(() => require('./Service').Service, (s: Service) => s.orders, { nullable: false })
+    @ManyToOne(() => require('./Service').Service, (s: Service) => s.orders, { nullable: true })
     @JoinColumn({ name: 'service_id' })
     service!: Service
 
