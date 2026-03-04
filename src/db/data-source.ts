@@ -19,8 +19,8 @@ declare global {
 export const AppDataSource = globalThis.__appDataSource ?? new DataSource({
     type: 'sqlite',
     database: databasePath,
-    synchronize: true, // use migrations in production
-    logging: true,
+    synchronize: isDev, // disable in production to avoid circular dependency validation
+    logging: isDev,
     entities: [User, Service, MasterService, Order, Shift, ShiftLog, OrderOperation],
 })
 
